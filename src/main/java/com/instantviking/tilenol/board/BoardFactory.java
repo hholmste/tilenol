@@ -42,22 +42,10 @@ public class BoardFactory
       unusedCells.remove(current);
       List<Tile> options = b.tileOptionsAt(current.x, current.y);
       Tile nextGeneratedTile = options.get(rand.nextInt(options.size()));
-      b.putTile(nextGeneratedTile, current.x, current.y);
+      b.putTile(nextGeneratedTile, current);
 
     }
     return b;
-  }
-
-  private static class Position
-  {
-    final int x;
-    final int y;
-
-    Position(int x, int y)
-    {
-      this.x = x;
-      this.y = y;
-    }
   }
 
 }

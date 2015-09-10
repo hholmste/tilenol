@@ -14,7 +14,7 @@ public class Board
   private final int width;
   private final int height;
   private final Tile[][] tiles;
-  private final List<Tile> generatedOrder;
+  private final List<Position> generatedOrder;
 
   public Board(int width, int height)
   {
@@ -28,7 +28,7 @@ public class Board
         tiles[i][j] = new Uninitialized();
       }
     }
-    generatedOrder = new ArrayList<Tile>();
+    generatedOrder = new ArrayList<Position>();
   }
 
   public int getWidth()
@@ -69,15 +69,15 @@ public class Board
     return tiles[x][y];
   }
 
-  public List<Tile> getGeneratedOrder()
+  public List<Position> getGeneratedOrder()
   {
     return Collections.unmodifiableList(generatedOrder);
   }
 
-  public void putTile(Tile nextGeneratedTile, int x, int y)
+  public void putTile(Tile tile, Position position)
   {
-    tiles[x][y] = nextGeneratedTile;
-    generatedOrder.add(nextGeneratedTile);
+    tiles[position.x][position.y] = tile;
+    generatedOrder.add(position);
   }
 
   @Override
