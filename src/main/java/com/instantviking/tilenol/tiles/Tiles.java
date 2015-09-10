@@ -1,4 +1,4 @@
-package com.instantviking.tilenol;
+package com.instantviking.tilenol.tiles;
 
 import java.util.List;
 import java.util.stream.Collectors;

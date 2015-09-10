@@ -8,6 +8,10 @@ import java.util.stream.IntStream;
 
 import org.junit.Test;
 
+import com.instantviking.tilenol.tiles.Tile;
+import com.instantviking.tilenol.tiles.Tiles;
+import com.instantviking.tilenol.tiles.Uninitialized;
+
 public class UnitializedNeighboursTest
 {
 

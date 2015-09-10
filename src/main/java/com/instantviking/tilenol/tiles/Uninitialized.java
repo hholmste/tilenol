@@ -1,4 +1,5 @@
-package com.instantviking.tilenol;
+package com.instantviking.tilenol.tiles;
+
 
 public class Uninitialized extends Tile
 {
