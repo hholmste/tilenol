@@ -2,8 +2,8 @@ package com.instantviking.tilenol.board;
 
 public class Position
 {
-  final int x;
-  final int y;
+  public final int x;
+  public final int y;
 
   Position(int x, int y)
   {
