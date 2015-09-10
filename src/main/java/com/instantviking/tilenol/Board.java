@@ -1,6 +1,7 @@
 package com.instantviking.tilenol;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -10,6 +11,7 @@ public class Board
   private final int width;
   private final int height;
   private final Tile[][] tiles;
+  private final List<Tile> generatedOrder;
 
   public static void main(String... args)
   {
@@ -60,14 +62,16 @@ public class Board
       }
     }
 
-    Random rand = new Random();
+    Random rand = new Random(new Random().nextLong());
     while (!unusedCells.isEmpty())
     {
       int index = rand.nextInt(unusedCells.size());
       Cell current = unusedCells.get(index);
       unusedCells.remove(current);
       List<Tile> options = tileOptionsAt(current.x, current.y);
-      tiles[current.x][current.y] = options.get(rand.nextInt(options.size()));
+      Tile nextGeneratedTile = options.get(rand.nextInt(options.size()));
+      tiles[current.x][current.y] = nextGeneratedTile;
+      generatedOrder.add(nextGeneratedTile);
     }
   }
 
@@ -83,6 +87,7 @@ public class Board
         tiles[i][j] = new Uninitialized();
       }
     }
+    generatedOrder = new ArrayList<Tile>();
   }
 
   /**
@@ -111,6 +116,11 @@ public class Board
       return new Uninitialized();
     }
     return tiles[x][y];
+  }
+
+  public List<Tile> getGeneratedOrder()
+  {
+    return Collections.unmodifiableList(generatedOrder);
   }
 
   private class Cell
