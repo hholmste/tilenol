@@ -12,9 +12,10 @@ import com.instantviking.tilenol.board.generation.StyleResolver;
  */
 public class BoardFactory
 {
-  private GenerativeStyle style = GenerativeStyle.RANDOM_VALID;
   private long usedSeed;
   private Optional<Long> userOverriddenSeed = Optional.empty();
+
+  private GenerativeStyle style = GenerativeStyle.RANDOM_VALID;
 
   public static void main(String... args)
   {
@@ -25,6 +26,12 @@ public class BoardFactory
   public BoardFactory withSeed(long provided_seed)
   {
     userOverriddenSeed = Optional.of(provided_seed);
+    return this;
+  }
+
+  public BoardFactory withStyle(GenerativeStyle style)
+  {
+    this.style = style;
     return this;
   }
 

@@ -69,6 +69,11 @@ public class Board
     return tiles[x][y];
   }
 
+  public boolean isInitialized(Position position)
+  {
+    return !Uninitialized.class.isInstance(findTile(position.x, position.y));
+  }
+
   public List<Position> getGeneratedOrder()
   {
     return Collections.unmodifiableList(generatedOrder);
