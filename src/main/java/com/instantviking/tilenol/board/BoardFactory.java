@@ -1,11 +1,10 @@
 package com.instantviking.tilenol.board;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import com.instantviking.tilenol.tiles.Tile;
+import com.instantviking.tilenol.board.generation.GenerativeStyle;
+import com.instantviking.tilenol.board.generation.StyleResolver;
 
 /**
  * Yeah, I went there
@@ -13,6 +12,7 @@ import com.instantviking.tilenol.tiles.Tile;
  */
 public class BoardFactory
 {
+  private GenerativeStyle style = GenerativeStyle.RANDOM_VALID;
   private long usedSeed;
   private Optional<Long> userOverriddenSeed = Optional.empty();
 
@@ -34,28 +34,7 @@ public class BoardFactory
    */
   public Board generateValidBoard(int width, int height)
   {
-    Random rand = buildRandom();
-
-    Board b = new Board(width, height);
-    List<Position> unusedCells = new ArrayList<Position>();
-    for (int i = 0; i < width; i++)
-    {
-      for (int j = 0; j < height; j++)
-      {
-        unusedCells.add(new Position(i, j));
-      }
-    }
-
-    while (!unusedCells.isEmpty())
-    {
-      int index = rand.nextInt(unusedCells.size());
-      Position current = unusedCells.get(index);
-      unusedCells.remove(current);
-      List<Tile> options = b.tileOptionsAt(current.x, current.y);
-      Tile nextGeneratedTile = options.get(rand.nextInt(options.size()));
-      b.putTile(nextGeneratedTile, current);
-    }
-    return b;
+    return StyleResolver.resolve(style).generate(width, height, buildRandom());
   }
 
   private Random buildRandom()
@@ -69,7 +48,7 @@ public class BoardFactory
     }
     return new Random(usedSeed);
   }
-  
+
   public long getUsedSeed()
   {
     return usedSeed;
