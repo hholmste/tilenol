@@ -10,7 +10,7 @@ import com.instantviking.tilenol.board.Board;
 import com.instantviking.tilenol.board.Position;
 import com.instantviking.tilenol.tiles.Tile;
 
-public class FillConnectedStyle implements Style
+final class FillConnectedStyle implements Style
 {
 
   @Override

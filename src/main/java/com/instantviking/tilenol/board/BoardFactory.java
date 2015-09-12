@@ -17,12 +17,6 @@ public class BoardFactory
 
   private GenerativeStyle style = GenerativeStyle.RANDOM_VALID;
 
-  public static void main(String... args)
-  {
-    Board b = new BoardFactory().generateValidBoard(3, 5);
-    System.out.println(b.toString());
-  }
-
   public BoardFactory withSeed(long provided_seed)
   {
     userOverriddenSeed = Optional.of(provided_seed);
