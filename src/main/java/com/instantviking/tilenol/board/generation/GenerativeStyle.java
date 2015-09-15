@@ -14,6 +14,8 @@ public enum GenerativeStyle
    * connections.
    * 
    * Repeat until the board is filled
+   * 
+   * Really only makes sense with a two-element alphabet
    */
   FILL_CONNECTED
 }

@@ -2,17 +2,16 @@ package com.instantviking.tilenol.board.generation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import com.instantviking.tilenol.board.Board;
 import com.instantviking.tilenol.board.Position;
 import com.instantviking.tilenol.tiles.Tile;
 
-final class RandomValidStyle implements Style
+final class RandomValidStyle extends Style
 {
 
   @Override
-  public Board generate(int width, int height, Random rand)
+  public Board generate(int width, int height)
   {
     Board b = new Board(width, height);
 
@@ -30,8 +29,7 @@ final class RandomValidStyle implements Style
       int index = rand.nextInt(unusedCells.size());
       Position current = unusedCells.get(index);
       unusedCells.remove(current);
-      List<Tile> options = b.tileOptionsAt(current.x, current.y);
-      Tile nextGeneratedTile = options.get(rand.nextInt(options.size()));
+      Tile nextGeneratedTile = generateTileAt(current.x, current.y, b);
       b.putTile(nextGeneratedTile, current);
     }
     return b;
