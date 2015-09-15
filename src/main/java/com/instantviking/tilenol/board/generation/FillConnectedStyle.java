@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.instantviking.tilenol.board.Board;
 import com.instantviking.tilenol.board.Position;
@@ -120,9 +121,30 @@ final class FillConnectedStyle extends Style
   public static void main(String... args)
   {
     FillConnectedStyle style = new FillConnectedStyle();
-    style.transitionalAlphabet = Arrays.asList("a", "b");
+    style.transitionalAlphabet = Arrays.asList(" ", "=");
     style.rand = new Random(1L);
-    Board b = style.generate(2, 2);
-    System.out.println(b);
+    Board b = style.generate(3, 2);
+
+    IntStream.range(0, b.getHeight()).forEach(row ->
+    {
+      IntStream.range(0, b.getWidth()).forEach(column ->
+      {
+        Tile t = b.findTile(column, row);
+        System.err.printf("  %s  ", t.north);
+      });
+      System.out.println(" ");
+      IntStream.range(0, b.getWidth()).forEach(column ->
+      {
+        Tile t = b.findTile(column, row);
+        System.err.printf(" %sX%s ", t.west, t.east);
+      });
+      System.out.println(" ");
+      IntStream.range(0, b.getWidth()).forEach(column ->
+      {
+        Tile t = b.findTile(column, row);
+        System.err.printf("  %s  ", t.south);
+      });
+      System.out.println("\n");
+    });
   }
 }
