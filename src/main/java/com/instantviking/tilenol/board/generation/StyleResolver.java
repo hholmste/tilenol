@@ -1,6 +1,5 @@
 package com.instantviking.tilenol.board.generation;
 
-
 public final class StyleResolver
 {
   public static Style resolve(GenerativeStyle styleHint)

@@ -1,71 +1,44 @@
 package com.instantviking.tilenol.tiles;
 
-import com.instantviking.tilenol.board.Position;
 
 public class Tile
 {
 
-  public final int val;
+  public final Object east;
+  public final Object west;
+  public final Object north;
+  public final Object south;
 
-  public Tile(int val)
+  public Tile(
+      Object generatedNorth,
+      Object generatedSouth,
+      Object generatedEast,
+      Object generatedWest)
   {
-    this.val = val;
+    this.north = generatedNorth;
+    this.south = generatedSouth;
+    this.east = generatedEast;
+    this.west = generatedWest;
   }
 
-  private boolean pointsInDirection(int direction)
+  public Object getEast()
   {
-    return (val & direction) == direction;
+    return east;
   }
 
-  @Override
-  public String toString()
+  public Object getWest()
   {
-    return String.format(
-        "{ w:%s n:%s s:%s e:%s (%2s)}",
-        (val & Tiles.WEST) == Tiles.WEST ? "<" : " ",
-        (val & Tiles.NORTH) == Tiles.NORTH ? "^" : " ",
-        (val & Tiles.SOUTH) == Tiles.SOUTH ? "v" : " ",
-        (val & Tiles.EAST) == Tiles.EAST ? ">" : " ",
-        val);
+    return west;
   }
 
-  public PositionedTile at(Position source)
+  public Object getNorth()
   {
-    return new PositionedTile(this, source);
+    return north;
   }
 
-  public static class PositionedTile
+  public Object getSouth()
   {
-    private final Tile tile;
-    private final Position position;
-
-    public PositionedTile(Tile tile, Position position)
-    {
-      this.tile = tile;
-      this.position = position;
-    }
-
-    public boolean pointsAt(Position target)
-    {
-      if (position.x == target.x)
-      {
-        if (position.y > target.y)
-        {
-          return tile.pointsInDirection(Tiles.NORTH);
-        } else
-        {
-          return tile.pointsInDirection(Tiles.SOUTH);
-        }
-      } else
-      {
-        if (position.x > target.x)
-        {
-          return tile.pointsInDirection(Tiles.WEST);
-        } else
-        {
-          return tile.pointsInDirection(Tiles.EAST);
-        }
-      }
-    }
+    return south;
   }
+
 }

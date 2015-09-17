@@ -1,21 +1,29 @@
 package com.instantviking.tilenol.board.generation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.instantviking.tilenol.board.Board;
 import com.instantviking.tilenol.board.Position;
 import com.instantviking.tilenol.tiles.Tile;
 
-final class FillConnectedStyle implements Style
+final class FillConnectedStyle extends Style
 {
 
   @Override
-  public Board generate(int width, int height, Random rand)
+  public Board generate(int width, int height)
   {
+    if (transitionalAlphabet.size() != 2)
+    {
+      throw new IllegalStateException(
+          "Can't use FILL_CONNECTED-generation with alphabets with more than two elements.");
+    }
+
     Board board = new Board(width, height);
 
     List<Position> unvisitedPositions = new ArrayList<Position>();
@@ -33,9 +41,10 @@ final class FillConnectedStyle implements Style
 
       Position currentSource = unvisitedPositions.get(index);
       unvisitedPositions.remove(index);
-      List<Tile> options = board
-          .tileOptionsAt(currentSource.x, currentSource.y);
-      Tile nextGeneratedTile = options.get(rand.nextInt(options.size()));
+      Tile nextGeneratedTile = generateTileAt(
+          currentSource.x,
+          currentSource.y,
+          board);
       board.putTile(nextGeneratedTile, currentSource);
 
       Stack<Position> connectedNeighbours = new Stack<>();
@@ -50,11 +59,12 @@ final class FillConnectedStyle implements Style
       while (!connectedNeighbours.isEmpty())
       {
         Position connectedNeighbour = connectedNeighbours.pop();
-        options = board.tileOptionsAt(
+        nextGeneratedTile = generateTileAt(
             connectedNeighbour.x,
-            connectedNeighbour.y);
-        nextGeneratedTile = options.get(rand.nextInt(options.size()));
+            connectedNeighbour.y,
+            board);
         board.putTile(nextGeneratedTile, connectedNeighbour);
+
         connectedNeighbouringPositions(
             nextGeneratedTile,
             connectedNeighbour,
@@ -69,35 +79,72 @@ final class FillConnectedStyle implements Style
     return board;
   }
 
+  /*
+   * find uninitialized neighbors that the tile has an open connection to.
+   */
   private List<Position> connectedNeighbouringPositions(
       Tile tile,
       Position position,
       Board board)
   {
-    return position
-        .neighbours()
+    Object transitionToTheNorth = board.findTile(position.x, position.y - 1).south;
+    Object transitionToTheSouth = board.findTile(position.x, position.y + 1).north;
+    Object transitionToTheEast = board.findTile(position.x + 1, position.y).west;
+    Object transitionToTheWest = board.findTile(position.x - 1, position.y).east;
+
+    return Arrays
+        .asList(
+            (transitionToTheNorth == null) ? new Position(
+                position.x,
+                position.y - 1) : null,
+            (transitionToTheSouth == null) ? new Position(
+                position.x,
+                position.y + 1) : null,
+            (transitionToTheEast == null) ? new Position(
+                position.x + 1,
+                position.y) : null,
+            (transitionToTheWest == null) ? new Position(
+                position.x - 1,
+                position.y) : null)
         .stream()
-        .filter(neighbour -> validPosition(neighbour, board))
-        .filter(neighbour -> !board.isInitialized(neighbour))
-        .filter(neighbour -> tilePointsAt(position, neighbour, board))
+        .filter(n -> n != null)
+        .filter(n -> isValidPosition(n, board))
         .collect(Collectors.toList());
   }
 
-  private boolean tilePointsAt(Position source, Position target, Board board)
+  private boolean isValidPosition(Position n, Board board)
   {
-    return board.findTile(source.x, source.y).at(source).pointsAt(target);
-  }
-
-  private boolean validPosition(Position position, Board board)
-  {
-    return position.x >= 0
-        && position.x < board.getWidth() && position.y >= 0
-        && position.y < board.getHeight();
+    return n.x >= 0
+        && n.y >= 0 && n.x < board.getWidth() && n.y < board.getHeight();
   }
 
   public static void main(String... args)
   {
-    Board b = new FillConnectedStyle().generate(4, 2, new Random(1L));
-    System.out.println(b);
+    FillConnectedStyle style = new FillConnectedStyle();
+    style.transitionalAlphabet = Arrays.asList(" ", "=");
+    style.rand = new Random(1L);
+    Board b = style.generate(3, 2);
+
+    IntStream.range(0, b.getHeight()).forEach(row ->
+    {
+      IntStream.range(0, b.getWidth()).forEach(column ->
+      {
+        Tile t = b.findTile(column, row);
+        System.err.printf("  %s  ", t.north);
+      });
+      System.out.println(" ");
+      IntStream.range(0, b.getWidth()).forEach(column ->
+      {
+        Tile t = b.findTile(column, row);
+        System.err.printf(" %sX%s ", t.west, t.east);
+      });
+      System.out.println(" ");
+      IntStream.range(0, b.getWidth()).forEach(column ->
+      {
+        Tile t = b.findTile(column, row);
+        System.err.printf("  %s  ", t.south);
+      });
+      System.out.println("\n");
+    });
   }
 }
