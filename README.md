@@ -12,6 +12,17 @@ If a client does not provide a transition-alphabet, one will be provided. This d
 
 Any alphabet with only two characters is considered a "connective" alphabet. Some generation-algorithm will only work with connective alphabets.
 
+### Border-rules
+
+Clients are able to select rules for how to treat the edges of the board.
+
+#### Wrapping
+
+The board may wrap north-south and/or east-west, or it may not wrap at all. If the board wraps, then normal transition rules are used across the wrap. If the board does not wrap, border rules are used instead at the edges of the board.
+
+#### Legal borders
+
+Clients can provide a set of legal border-transitions, i.e. what transitions are considered matches when a tile points outside the board. If no transitions are provided, the board will assume that all transitions are allowed. The list of legal transitions must be a sub-set of the transition-alphabet.
 
 ## Future features
 
