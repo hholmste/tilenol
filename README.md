@@ -21,3 +21,5 @@ Any alphabet with only two characters is considered a "connective" alphabet. Som
 
 **Flooding** A client should be able to ask the board to get every tile connected to a particular position; the client may have to provide a dictionary of legal transitions to be able to expand what connected means.
 
+**Transition-weights** The transition-alphabet can come with a list of weights, which will alter the frequency of the use of transitions. For example, if you have a three-letter alphabet and a weight-list looking like [1, 1, 2], then the third letter will be used roughly as often as the two others combined.
+
