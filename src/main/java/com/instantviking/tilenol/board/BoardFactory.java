@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import com.instantviking.tilenol.board.borders.WrappingRule;
 import com.instantviking.tilenol.board.generation.GenerativeStyle;
 import com.instantviking.tilenol.board.generation.StyleResolver;
 
@@ -17,7 +18,9 @@ public class BoardFactory
   private long usedSeed;
   private Optional<Long> userOverriddenSeed = Optional.empty();
   private Optional<List<Object>> transitionalAlphabet = Optional.empty();
+  private Optional<List<Object>> borderTransitions = Optional.empty();
   private GenerativeStyle style = GenerativeStyle.RANDOM_VALID;
+  private WrappingRule wrappingRule = WrappingRule.FREE_BORDERS;
 
   public BoardFactory withSeed(long provided_seed)
   {
@@ -33,6 +36,31 @@ public class BoardFactory
           "When providing a generative style, it is polite to actually provide one. Instead, you provided the null-reference.");
     }
     this.style = style;
+    return this;
+  }
+
+  /**
+   * Describes how tiles on the edges of the board should behave. By default,
+   * they will be free to choose any transition out of the board.
+   * 
+   * @param rule
+   * @return
+   */
+  public BoardFactory withWrappingRule(WrappingRule rule)
+  {
+    this.wrappingRule = rule;
+    return this;
+  }
+
+  public BoardFactory withBorderTransitions(Object... borderTransitions)
+  {
+    if (borderTransitions == null || borderTransitions.length <= 0)
+    {
+      throw new IllegalArgumentException(
+          "Must have at least one legal transition off the board");
+    }
+
+    this.borderTransitions = Optional.of(Arrays.asList(borderTransitions));
     return this;
   }
 
@@ -69,12 +97,33 @@ public class BoardFactory
   {
     return StyleResolver
         .resolve(style)
-        .usingTransitions(
-            transitionalAlphabet.isPresent()
-                ? transitionalAlphabet.get()
-                : Arrays.asList(Boolean.FALSE, Boolean.TRUE))
+        .usingTransitions(ensureTransitionalAlphabet())
+        .usingBorderTransitions(ensureBorderTransitions())
+        .usingWrappingRule(wrappingRule)
         .usingRandom(buildRandom())
+        .validateOrDie()
         .generate(width, height);
+  }
+
+  /**
+   * if the client has specified border-transitions, we use these, otherwise we
+   * use whatever we will use for regular transitions
+   */
+  private List<Object> ensureBorderTransitions()
+  {
+    if (borderTransitions.isPresent())
+    {
+      return borderTransitions.get();
+    }
+
+    return ensureTransitionalAlphabet();
+  }
+
+  private List<Object> ensureTransitionalAlphabet()
+  {
+    return transitionalAlphabet.isPresent()
+        ? transitionalAlphabet.get()
+        : Arrays.asList(Boolean.FALSE, Boolean.TRUE);
   }
 
   private Random buildRandom()

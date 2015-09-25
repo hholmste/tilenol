@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.instantviking.tilenol.board.Board;
+import com.instantviking.tilenol.board.borders.WrappingRule;
 import com.instantviking.tilenol.tiles.Tile;
 
 public abstract class Style
@@ -12,6 +13,8 @@ public abstract class Style
 
   protected Random rand;
   protected List<Object> transitionalAlphabet;
+  private List<Object> borderTransitions;
+  private WrappingRule wrappingRule;
 
   public abstract Board generate(int width, int height);
 
@@ -25,6 +28,18 @@ public abstract class Style
   {
     this.transitionalAlphabet = Collections
         .unmodifiableList(transitionalAlphabet);
+    return this;
+  }
+
+  public Style usingBorderTransitions(List<Object> borderTransitions)
+  {
+    this.borderTransitions = borderTransitions;
+    return this;
+  }
+
+  public Style usingWrappingRule(WrappingRule rule)
+  {
+    this.wrappingRule = rule;
     return this;
   }
 
@@ -62,4 +77,19 @@ public abstract class Style
   {
     return transitionalAlphabet.get(rand.nextInt(transitionalAlphabet.size()));
   }
+
+  public Style validateOrDie()
+  {
+    if (!transitionalAlphabet.containsAll(borderTransitions))
+    {
+      throw new IllegalStateException(
+          String
+              .format(
+                  "The collection of legal border-transitions contains items that are not present in the collection of legal transitions. This is bad and must not be repeated.\nLegal borders: %s\nLegal transitions: %s",
+                  transitionalAlphabet,
+                  borderTransitions));
+    }
+    return this;
+  }
+
 }
