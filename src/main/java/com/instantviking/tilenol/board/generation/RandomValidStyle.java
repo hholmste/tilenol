@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 
 import com.instantviking.tilenol.board.Board;
 import com.instantviking.tilenol.board.Position;
+import com.instantviking.tilenol.board.borders.WrappingRule;
 import com.instantviking.tilenol.tiles.Tile;
 
 final class RandomValidStyle extends Style
@@ -16,7 +17,7 @@ final class RandomValidStyle extends Style
   @Override
   public Board generate(int width, int height)
   {
-    Board b = new Board(width, height);
+    Board b = new Board(width, height, wrappingRule);
 
     List<Position> unusedCells = new ArrayList<Position>();
     for (int i = 0; i < width; i++)
@@ -43,25 +44,26 @@ final class RandomValidStyle extends Style
     RandomValidStyle style = new RandomValidStyle();
     style.transitionalAlphabet = Arrays.asList(" ", "a", "=", "0");
     style.rand = new Random(1L);
+    style.wrappingRule = WrappingRule.WRAP_ALWAYS;
     Board b = style.generate(6, 6);
 
     IntStream.range(0, b.getHeight()).forEach(row ->
     {
       IntStream.range(0, b.getWidth()).forEach(column ->
       {
-        Tile t = b.findTile(column, row);
+        Tile t = b.getTile(column, row);
         System.err.printf("  %s  ", t.north);
       });
       System.out.println(" ");
       IntStream.range(0, b.getWidth()).forEach(column ->
       {
-        Tile t = b.findTile(column, row);
+        Tile t = b.getTile(column, row);
         System.err.printf(" %sX%s ", t.west, t.east);
       });
       System.out.println(" ");
       IntStream.range(0, b.getWidth()).forEach(column ->
       {
-        Tile t = b.findTile(column, row);
+        Tile t = b.getTile(column, row);
         System.err.printf("  %s  ", t.south);
       });
       System.out.println("\n");

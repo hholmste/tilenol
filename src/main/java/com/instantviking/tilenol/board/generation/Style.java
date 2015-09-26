@@ -14,7 +14,7 @@ public abstract class Style
   protected Random rand;
   protected List<Object> transitionalAlphabet;
   private List<Object> borderTransitions;
-  private WrappingRule wrappingRule;
+  protected WrappingRule wrappingRule;
 
   public abstract Board generate(int width, int height);
 

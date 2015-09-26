@@ -10,6 +10,7 @@ import java.util.stream.IntStream;
 
 import com.instantviking.tilenol.board.Board;
 import com.instantviking.tilenol.board.Position;
+import com.instantviking.tilenol.board.borders.WrappingRule;
 import com.instantviking.tilenol.tiles.Tile;
 
 final class FillConnectedStyle extends Style
@@ -24,7 +25,7 @@ final class FillConnectedStyle extends Style
           "Can't use FILL_CONNECTED-generation with alphabets with more than two elements.");
     }
 
-    Board board = new Board(width, height);
+    Board board = new Board(width, height, wrappingRule);
 
     List<Position> unvisitedPositions = new ArrayList<Position>();
     for (int i = 0; i < width; i++)
@@ -122,7 +123,8 @@ final class FillConnectedStyle extends Style
   {
     FillConnectedStyle style = new FillConnectedStyle();
     style.transitionalAlphabet = Arrays.asList(" ", "=");
-    style.rand = new Random(1L);
+    style.rand = new Random(2L);
+    style.wrappingRule = WrappingRule.WRAP_NORTH_SOUTH;
     Board b = style.generate(3, 2);
 
     IntStream.range(0, b.getHeight()).forEach(row ->
