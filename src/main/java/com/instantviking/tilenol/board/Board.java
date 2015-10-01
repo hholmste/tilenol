@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.instantviking.tilenol.board.borders.WrappingRule;
+import com.instantviking.tilenol.tiles.OffBoard;
 import com.instantviking.tilenol.tiles.Tile;
 import com.instantviking.tilenol.tiles.Uninitialized;
 
@@ -63,7 +64,7 @@ public class Board
     if (adjustedX < 0
         || adjustedX >= this.width || adjustedY < 0 || adjustedY >= this.height)
     {
-      return new Uninitialized();
+      return new OffBoard();
     }
     return tiles[adjustedX][adjustedY];
   }

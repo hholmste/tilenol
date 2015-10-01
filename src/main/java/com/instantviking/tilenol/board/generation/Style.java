@@ -6,14 +6,16 @@ import java.util.Random;
 
 import com.instantviking.tilenol.board.Board;
 import com.instantviking.tilenol.board.borders.WrappingRule;
+import com.instantviking.tilenol.tiles.OffBoard;
 import com.instantviking.tilenol.tiles.Tile;
+import com.instantviking.tilenol.tiles.Uninitialized;
 
 public abstract class Style
 {
 
   protected Random rand;
   protected List<Object> transitionalAlphabet;
-  private List<Object> borderTransitions;
+  protected List<Object> borderTransitions;
   protected WrappingRule wrappingRule;
 
   public abstract Board generate(int width, int height);
@@ -49,23 +51,30 @@ public abstract class Style
    */
   protected Tile generateTileAt(int x, int y, Board board)
   {
-    Object transitionToTheNorth = board.findTile(x, y - 1).south;
-    Object transitionToTheSouth = board.findTile(x, y + 1).north;
-    Object transitionToTheEast = board.findTile(x + 1, y).west;
-    Object transitionToTheWest = board.findTile(x - 1, y).east;
-
+    Tile northernTile = board.findTile(x, y - 1);
+    Object transitionToTheNorth = northernTile.south;
     Object generatedNorth = (transitionToTheNorth != null)
         ? transitionToTheNorth
-        : randomTransition();
+        : randomTransition(northernTile);
+
+    Tile southernTile = board.findTile(x, y + 1);
+    Object transitionToTheSouth = southernTile.north;
     Object generatedSouth = (transitionToTheSouth != null)
         ? transitionToTheSouth
-        : randomTransition();
+        : randomTransition(southernTile);
+
+    Tile easternTile = board.findTile(x + 1, y);
+    Object transitionToTheEast = easternTile.west;
     Object generatedEast = (transitionToTheEast != null)
         ? transitionToTheEast
-        : randomTransition();
+        : randomTransition(easternTile);
+
+    Tile westernTile = board.findTile(x - 1, y);
+    Object transitionToTheWest = westernTile.east;
     Object generatedWest = (transitionToTheWest != null)
         ? transitionToTheWest
-        : randomTransition();
+        : randomTransition(westernTile);
+
     return new Tile(
         generatedNorth,
         generatedSouth,
@@ -73,13 +82,31 @@ public abstract class Style
         generatedWest);
   }
 
-  private Object randomTransition()
+  private Object randomTransition(Tile neighbour)
   {
-    return transitionalAlphabet.get(rand.nextInt(transitionalAlphabet.size()));
+    if (neighbour instanceof Uninitialized)
+    {
+      return transitionalAlphabet
+          .get(rand.nextInt(transitionalAlphabet.size()));
+    }
+    if (neighbour instanceof OffBoard)
+    {
+      return borderTransitions.get(rand.nextInt(borderTransitions.size()));
+    }
+    return transitionalAlphabet.get(0);
   }
 
   public Style validateOrDie()
   {
+    if (transitionalAlphabet == null)
+    {
+      throw new IllegalStateException("Must have a transitional alphabet");
+    }
+    if (borderTransitions == null)
+    {
+      throw new IllegalStateException("Must have border transitions");
+    }
+
     if (!transitionalAlphabet.containsAll(borderTransitions))
     {
       throw new IllegalStateException(

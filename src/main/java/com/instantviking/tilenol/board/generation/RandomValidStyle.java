@@ -43,8 +43,10 @@ final class RandomValidStyle extends Style
   {
     RandomValidStyle style = new RandomValidStyle();
     style.transitionalAlphabet = Arrays.asList(" ", "a", "=", "0");
+    style.borderTransitions = Arrays.asList("=", "a");
     style.rand = new Random(1L);
-    style.wrappingRule = WrappingRule.WRAP_ALWAYS;
+    style.wrappingRule = WrappingRule.FREE_BORDERS;
+    style.validateOrDie();
     Board b = style.generate(6, 6);
 
     IntStream.range(0, b.getHeight()).forEach(row ->

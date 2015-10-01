@@ -119,12 +119,16 @@ final class FillConnectedStyle extends Style
         && n.y >= 0 && n.x < board.getWidth() && n.y < board.getHeight();
   }
 
+  /**
+   * @param args
+   */
   public static void main(String... args)
   {
     FillConnectedStyle style = new FillConnectedStyle();
     style.transitionalAlphabet = Arrays.asList(" ", "=");
-    style.rand = new Random(2L);
-    style.wrappingRule = WrappingRule.WRAP_NORTH_SOUTH;
+    style.borderTransitions = Arrays.asList(" ");
+    style.rand = new Random(1L);
+    style.wrappingRule = WrappingRule.FREE_BORDERS;
     Board b = style.generate(3, 2);
 
     IntStream.range(0, b.getHeight()).forEach(row ->
