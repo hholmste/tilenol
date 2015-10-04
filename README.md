@@ -32,3 +32,8 @@ Clients can provide a set of legal border-transitions, i.e. what transitions are
 
 **Transition-weights** The transition-alphabet can come with a list of weights, which will alter the frequency of the use of transitions. For example, if you have a three-letter alphabet and a weight-list looking like [1, 1, 2], then the third letter will be used roughly as often as the two others combined.
 
+**Exploration** Pick a tile and a set of legal transitions. An agent will start walking between tiles, only following the legal transitions, until it has visited all reachable tiles. Returns an ordered list of tiles that represents the path the agent took. This path will probably contain duplicates.
+
+**Reachability** Pick two tiles and a set of legal transitions. Returns true iff it is possible to reach one tile from another.
+
+**Cost of movement** Alongside the list of transitions, a client may also supply a list of transition-costs.
