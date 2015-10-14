@@ -123,6 +123,15 @@ public class Board
     generatedOrder.add(position);
   }
 
+  /**
+   * please remember to dispose of the navigator once you're done with it.
+   * 
+   */
+  public Navigator createNavigator()
+  {
+    return new Navigator(this, wrappingRule);
+  }
+
   @Override
   public String toString()
   {

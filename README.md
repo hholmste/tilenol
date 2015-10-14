@@ -24,6 +24,10 @@ The board may wrap north-south and/or east-west, or it may not wrap at all. If t
 
 Clients can provide a set of legal border-transitions, i.e. what transitions are considered matches when a tile points outside the board. If no transitions are provided, the board will assume that all transitions are allowed. The list of legal transitions must be a sub-set of the transition-alphabet.
 
+### Navigator
+
+The board can present clients with a Navigator that can help with figuring out legal moves around the board.
+
 ## Future features
 
 **Three dimensions** A board can have depth, and a tile will have up/down connections.
@@ -37,3 +41,4 @@ Clients can provide a set of legal border-transitions, i.e. what transitions are
 **Reachability** Pick two tiles and a set of legal transitions. Returns true iff it is possible to reach one tile from another.
 
 **Cost of movement** Alongside the list of transitions, a client may also supply a list of transition-costs.
+

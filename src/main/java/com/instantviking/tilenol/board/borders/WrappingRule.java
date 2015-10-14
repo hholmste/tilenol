@@ -24,5 +24,16 @@ public enum WrappingRule
    * WRAP_ALWAYS mean that both WRAP_NORTH_SOUTH and WRAP_EAST_WEST is in
    * effect.
    */
-  WRAP_ALWAYS
+  WRAP_ALWAYS;
+
+  public boolean wrapsEastWest()
+  {
+    return this == WRAP_EAST_WEST || this == WRAP_ALWAYS;
+  }
+
+  public boolean wrapsNorthSouth()
+  {
+    return this == WRAP_NORTH_SOUTH || this == WRAP_ALWAYS;
+  }
+
 }
